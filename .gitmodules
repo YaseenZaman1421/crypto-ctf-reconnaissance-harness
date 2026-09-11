@@ -1,0 +1,18 @@
+[submodule "upstream/CtfCryptoTool"]
+	path = upstream/CtfCryptoTool
+	url = https://github.com/ignis-sec/CtfCryptoTool.git
+[submodule "upstream/ctf-kit"]
+	path = upstream/ctf-kit
+	url = https://github.com/MysterionRise/ctf-kit.git
+[submodule "upstream/CTF-Crypto-Toolkit"]
+	path = upstream/CTF-Crypto-Toolkit
+	url = https://github.com/satellacodes/CTF-Crypto-Toolkit.git
+[submodule "upstream/CyberChef"]
+	path = upstream/CyberChef
+	url = https://github.com/gchq/CyberChef.git
+[submodule "upstream/RsaCtfTool"]
+	path = upstream/RsaCtfTool
+	url = https://github.com/RsaCtfTool/RsaCtfTool.git
+[submodule "upstream/xortool"]
+	path = upstream/xortool
+	url = https://github.com/hellman/xortool.git
