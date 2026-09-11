@@ -29,3 +29,7 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install build
       - run: python -m build
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y debhelper dh-python python3-all python3-setuptools
+      - run: dpkg-buildpackage -us -uc -b
+      - run: ls -lh ../ccrh_*.deb
