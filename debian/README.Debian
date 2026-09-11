@@ -1,0 +1,9 @@
+ccrh for Debian
+================
+
+After installation, run:
+
+  ccrh scan ./challenge -o report.json -m report.md
+
+The package does not execute challenge code and does not install the upstream
+reference projects as runtime dependencies.

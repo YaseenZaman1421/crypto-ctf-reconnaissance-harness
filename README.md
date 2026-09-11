@@ -17,6 +17,15 @@ python3 -m pip install -e .
 ccrh scan ./challenge -o report.json -m report.md
 ```
 
+Debian-based users can build or install the local package from `debian/`:
+
+```bash
+dpkg-buildpackage -us -uc -b
+sudo apt install ../ccrh_0.1.0_all.deb
+```
+
+The `.deb` path targets Debian-family distributions. Other Linux distributions can use the Python package, pipx, or a wheel from a release.
+
 Reports include file size, type, SHA-256, extracted parameter assignments, line-level clues, and ranked attack paths. The scanner is dependency-free and uses conservative text heuristics. It never imports or executes challenge code.
 
 ## Bounded solver analysis
@@ -34,6 +43,8 @@ ccrh scan ./challenge --trial-factor-bound 10000000
 ```
 
 The report records detected solver capabilities (`python`, `sage`, and `z3`). SageMath and Z3 are capability signals for future adapters; the current release does not execute challenge code or invoke external solvers automatically.
+
+More installation and report details are in [docs/USAGE.md](docs/USAGE.md). Contribution rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Project licensing status is documented in [LICENSE-STATUS.md](LICENSE-STATUS.md).
 
 ## Reference projects
 

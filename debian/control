@@ -1,0 +1,15 @@
+Source: ccrh
+Section: utils
+Priority: optional
+Maintainer: Yaseen Zaman <yaseenzaman1312@gmail.com>
+Build-Depends: debhelper-compat (= 13), dh-python, python3-all, python3-setuptools
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/YaseenZaman1421/crypto-ctf-reconnaissance-harness
+
+Package: ccrh
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}, python3 (>= 3.10)
+Description: safe reconnaissance and evidence reporting for crypto CTFs
+ CCRH inventories challenge files, extracts cryptographic clues, runs bounded
+ solver checks, and writes evidence-linked JSON or Markdown reports.

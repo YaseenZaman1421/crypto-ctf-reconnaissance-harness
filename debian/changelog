@@ -1,0 +1,5 @@
+ccrh (0.1.0) unstable; urgency=medium
+
+  * Initial Debian package for the Crypto-CTF Reconnaissance Harness.
+
+ -- Yaseen Zaman <yaseenzaman1312@gmail.com>  Fri, 11 Sep 2026 22:00:00 +0300
