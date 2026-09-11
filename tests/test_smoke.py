@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ccrh.cli import scan
 from ccrh.inventory.scanner import inventory
+from ccrh.analysis.solvers import factor_small
 
 
 class SmokeTest(unittest.TestCase):
@@ -40,6 +41,19 @@ class SmokeTest(unittest.TestCase):
             scan(root, output, None)
             report = json.loads(output.read_text(encoding="utf-8"))
             self.assertIn("Printable single-byte XOR candidate", {item["title"] for item in report["findings"]})
+
+    def test_factorization_is_bounded_and_rsa_factors_are_reported(self):
+        self.assertEqual(factor_small(91, 10), (7, 13))
+        self.assertIsNone(factor_small(97, 5))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "challenge.py").write_text("n = 91\np = 7\nq = 13\n", encoding="utf-8")
+            output = root / "report.json"
+            scan(root, output, None, trial_factor_bound=20)
+            report = json.loads(output.read_text(encoding="utf-8"))
+            titles = {item["title"] for item in report["findings"]}
+            self.assertIn("RSA modulus factored within bound", titles)
+            self.assertIn("RSA factors explicitly reconstruct modulus", titles)
 
     def test_inventory_hashes_files_and_ignores_metadata_dirs(self):
         with tempfile.TemporaryDirectory() as directory:

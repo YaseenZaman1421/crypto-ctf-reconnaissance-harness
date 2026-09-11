@@ -2,17 +2,17 @@ import argparse
 from pathlib import Path
 
 from ccrh.analysis.ranker import rank_attacks
-from ccrh.analysis.solvers import analyze, finding_dicts
+from ccrh.analysis.solvers import analyze, capabilities, finding_dicts
 from ccrh.inventory.scanner import inventory
 from ccrh.parsers.crypto import extract_clues, extract_parameters, parameter_dict
 from ccrh.reporting.render import render_markdown, report_data, write_json
 
 
-def scan(root: Path, output: Path | None, markdown: Path | None) -> int:
+def scan(root: Path, output: Path | None, markdown: Path | None, trial_factor_bound: int = 1_000_000) -> int:
     records = inventory(root)
     clues = [clue for record in records for clue in extract_clues(record)]
     parameters = [parameter for record in records for parameter in extract_parameters(record)]
-    findings = finding_dicts(analyze(parameters))
+    findings = finding_dicts(analyze(parameters, trial_factor_bound))
     report = report_data(
         str(root.resolve()),
         [{"path": r.path, "size": r.size, "suffix": r.suffix, "sha256": r.sha256, "kind": r.kind, "text_read": r.text is not None} for r in records],
@@ -20,6 +20,7 @@ def scan(root: Path, output: Path | None, markdown: Path | None) -> int:
         parameter_dict(parameters),
         rank_attacks(clues, [parameter.name for parameter in parameters]),
         findings,
+        capabilities(),
     )
     if output:
         write_json(report, output)
@@ -40,8 +41,9 @@ def main() -> int:
     scan_parser.add_argument("root", type=Path)
     scan_parser.add_argument("--output", "-o", type=Path, help="write a JSON report")
     scan_parser.add_argument("--markdown", "-m", type=Path, help="write a Markdown report")
+    scan_parser.add_argument("--trial-factor-bound", type=int, default=1_000_000, help="maximum trial divisor for small RSA moduli (default: 1000000)")
     args = parser.parse_args()
-    return scan(args.root, args.output, args.markdown) if args.command == "scan" else 2
+    return scan(args.root, args.output, args.markdown, args.trial_factor_bound) if args.command == "scan" else 2
 
 
 if __name__ == "__main__":

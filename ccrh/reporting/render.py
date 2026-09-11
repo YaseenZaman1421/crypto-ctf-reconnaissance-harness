@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Any
 
 
-def report_data(root: str, files: list[dict[str, Any]], clues: list[dict[str, Any]], parameters: list[dict[str, Any]], attacks: list[dict[str, Any]], findings: list[dict[str, Any]]) -> dict[str, Any]:
-    return {"schema_version": 2, "root": root, "files": files, "clues": clues, "parameters": parameters, "ranked_attacks": attacks, "findings": findings}
+def report_data(root: str, files: list[dict[str, Any]], clues: list[dict[str, Any]], parameters: list[dict[str, Any]], attacks: list[dict[str, Any]], findings: list[dict[str, Any]], capabilities: dict[str, bool]) -> dict[str, Any]:
+    return {"schema_version": 3, "root": root, "files": files, "clues": clues, "parameters": parameters, "ranked_attacks": attacks, "findings": findings, "capabilities": capabilities}
 
 
 def write_json(report: dict[str, Any], destination: Path) -> None:
@@ -13,7 +13,9 @@ def write_json(report: dict[str, Any], destination: Path) -> None:
 
 
 def render_markdown(report: dict[str, Any]) -> str:
-    lines = ["# CCRH reconnaissance report", "", f"Root: `{report['root']}`", "", "## Files", ""]
+    lines = ["# CCRH reconnaissance report", "", f"Root: `{report['root']}`", "", "## Solver capabilities", ""]
+    lines.extend(f"- `{name}`: {'available' if available else 'not detected'}" for name, available in report["capabilities"].items())
+    lines += ["", "## Files", ""]
     lines.extend(f"- `{item['path']}` ({item['size']} bytes, `{item['suffix'] or 'no extension'}`)" for item in report["files"])
     lines += ["", "## Extracted parameters", ""]
     lines.extend(f"- `{item['name']}` from `{item['path']}:{item['line']}`: `{item['value']}`" for item in report["parameters"])
