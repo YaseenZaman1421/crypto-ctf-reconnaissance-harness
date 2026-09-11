@@ -49,7 +49,7 @@ def extract_clues(record: FileRecord) -> list[Clue]:
 
 
 PARAMETER_PATTERN = re.compile(
-    r"\b(?P<name>modulus|public_key|private_key|ciphertext|plaintext|message|nonce|iv|key|n|e|d|p|q|c)\b\s*[:=]\s*(?P<value>[^,;#\n]+)",
+    r"\b(?P<name>modulus|public_key|private_key|ciphertext|plaintext|message|nonce|iv|key|data|ct|flag|n|e|d|p|q|c)\b\s*[:=]\s*(?P<value>[^,;#\n]+)",
     re.I,
 )
 

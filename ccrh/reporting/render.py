@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Any
 
 
-def report_data(root: str, files: list[dict[str, Any]], clues: list[dict[str, Any]], parameters: list[dict[str, Any]], attacks: list[dict[str, Any]]) -> dict[str, Any]:
-    return {"schema_version": 1, "root": root, "files": files, "clues": clues, "parameters": parameters, "ranked_attacks": attacks}
+def report_data(root: str, files: list[dict[str, Any]], clues: list[dict[str, Any]], parameters: list[dict[str, Any]], attacks: list[dict[str, Any]], findings: list[dict[str, Any]]) -> dict[str, Any]:
+    return {"schema_version": 2, "root": root, "files": files, "clues": clues, "parameters": parameters, "ranked_attacks": attacks, "findings": findings}
 
 
 def write_json(report: dict[str, Any], destination: Path) -> None:
@@ -19,6 +19,11 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines.extend(f"- `{item['name']}` from `{item['path']}:{item['line']}`: `{item['value']}`" for item in report["parameters"])
     lines += ["", "## Ranked attack paths", ""]
     lines.extend(f"- **{attack['kind']}** (score {attack['score']}): {attack['recommendation']}" for attack in report["ranked_attacks"])
+    lines += ["", "## Computational findings", ""]
+    if report["findings"]:
+        lines.extend(f"- **{item['severity'].upper()} — {item['title']}**: {item['detail']} (evidence: {', '.join(item['evidence'])})" for item in report["findings"])
+    else:
+        lines.append("- No bounded solver findings were produced.")
     lines += ["", "## Evidence", ""]
     lines.extend(f"- `{clue['path']}:{clue['line']}` — **{clue['kind']}**: `{clue['evidence']}`" for clue in report["clues"])
     return "\n".join(lines) + "\n"

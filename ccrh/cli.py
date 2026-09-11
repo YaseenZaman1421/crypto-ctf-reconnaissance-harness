@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 
 from ccrh.analysis.ranker import rank_attacks
+from ccrh.analysis.solvers import analyze, finding_dicts
 from ccrh.inventory.scanner import inventory
 from ccrh.parsers.crypto import extract_clues, extract_parameters, parameter_dict
 from ccrh.reporting.render import render_markdown, report_data, write_json
@@ -11,12 +12,14 @@ def scan(root: Path, output: Path | None, markdown: Path | None) -> int:
     records = inventory(root)
     clues = [clue for record in records for clue in extract_clues(record)]
     parameters = [parameter for record in records for parameter in extract_parameters(record)]
+    findings = finding_dicts(analyze(parameters))
     report = report_data(
         str(root.resolve()),
         [{"path": r.path, "size": r.size, "suffix": r.suffix, "sha256": r.sha256, "kind": r.kind, "text_read": r.text is not None} for r in records],
         [{"kind": c.kind, "value": c.value, "path": c.path, "line": c.line, "evidence": c.evidence} for c in clues],
         parameter_dict(parameters),
         rank_attacks(clues, [parameter.name for parameter in parameters]),
+        findings,
     )
     if output:
         write_json(report, output)
@@ -26,6 +29,7 @@ def scan(root: Path, output: Path | None, markdown: Path | None) -> int:
     print(f"Scanned {len(records)} files; found {len(clues)} crypto clues.")
     if report["ranked_attacks"]:
         print("Likely attack areas: " + ", ".join(item["kind"] for item in report["ranked_attacks"]))
+    print(f"Computational findings: {len(findings)}")
     return 0
 
 
