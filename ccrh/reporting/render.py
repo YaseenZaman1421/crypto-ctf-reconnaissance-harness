@@ -23,9 +23,9 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines.extend(f"- **{attack['kind']}** (score {attack['score']}): {attack['recommendation']}" for attack in report["ranked_attacks"])
     lines += ["", "## Computational findings", ""]
     if report["findings"]:
-        lines.extend(f"- **{item['severity'].upper()} — {item['title']}**: {item['detail']} (evidence: {', '.join(item['evidence'])})" for item in report["findings"])
+        lines.extend(f"- **{item['severity'].upper()} - {item['title']}**: {item['detail']} (evidence: {', '.join(item['evidence'])})" for item in report["findings"])
     else:
         lines.append("- No bounded solver findings were produced.")
     lines += ["", "## Evidence", ""]
-    lines.extend(f"- `{clue['path']}:{clue['line']}` — **{clue['kind']}**: `{clue['evidence']}`" for clue in report["clues"])
+    lines.extend(f"- `{clue['path']}:{clue['line']}` - **{clue['kind']}**: `{clue['evidence']}`" for clue in report["clues"])
     return "\n".join(lines) + "\n"

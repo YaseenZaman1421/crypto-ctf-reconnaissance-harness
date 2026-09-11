@@ -99,6 +99,8 @@ def analyze_parameters(parameters: list[Parameter]) -> list[Finding]:
 
 def factor_small(value: int, bound: int = 1_000_000) -> tuple[int, int] | None:
     """Find a factor using bounded trial division; never runs beyond the configured bound."""
+    if bound < 1 or bound > 100_000_000:
+        raise ValueError("trial factor bound must be between 1 and 100000000")
     if value < 4:
         return None
     if value % 2 == 0:

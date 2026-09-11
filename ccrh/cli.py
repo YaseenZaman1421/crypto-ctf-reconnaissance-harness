@@ -9,6 +9,8 @@ from ccrh.reporting.render import render_markdown, report_data, write_json
 
 
 def scan(root: Path, output: Path | None, markdown: Path | None, trial_factor_bound: int = 1_000_000) -> int:
+    if trial_factor_bound < 1 or trial_factor_bound > 100_000_000:
+        raise ValueError("--trial-factor-bound must be between 1 and 100000000")
     records = inventory(root)
     clues = [clue for record in records for clue in extract_clues(record)]
     parameters = [parameter for record in records for parameter in extract_parameters(record)]

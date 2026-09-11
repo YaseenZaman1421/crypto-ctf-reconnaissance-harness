@@ -55,6 +55,14 @@ class SmokeTest(unittest.TestCase):
             self.assertIn("RSA modulus factored within bound", titles)
             self.assertIn("RSA factors explicitly reconstruct modulus", titles)
 
+    def test_inventory_rejects_non_directory_and_solver_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with self.assertRaises(ValueError):
+                inventory(root / "missing")
+        with self.assertRaises(ValueError):
+            factor_small(91, 100_000_001)
+
     def test_inventory_hashes_files_and_ignores_metadata_dirs(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
