@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crypto-ctf-reconnaissance-harness"
+version = "0.1.0"
+description = "Safe reconnaissance and evidence reporting for cryptography CTF challenges"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[project.scripts]
+ccrh = "ccrh.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["ccrh*"]
